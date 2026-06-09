@@ -164,7 +164,7 @@
 
   /* POD MODELS TAB */
   .models-page { padding:28px 40px; max-width:1280px; margin:0 auto; }
-  .models-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; }
+  .models-grid { display:grid; grid-template-columns:1fr; gap:24px; max-width:520px; margin:0 auto; }
   .model-card { background:var(--surface); border-radius:var(--radius-lg); border:1px solid var(--border); box-shadow:var(--shadow-sm); overflow:hidden; }
   .model-img-wrap { width:100%; height:220px; background:var(--surface-alt); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border-light); overflow:hidden; }
   .model-img-wrap img { max-width:90%; max-height:90%; object-fit:contain; }
@@ -286,22 +286,9 @@
   <div class="tab-content" id="tab-models">
     <div class="models-page"><div class="models-grid">
       <div class="model-card">
-        <div class="model-img-wrap"><img id="model1PageImg" alt="Model 1"></div>
-        <div class="model-card-body">
-          <h2>EnergyPod Classic</h2><span class="model-tag-inline">Model 1</span>
-          <p>A sleek, ergonomically designed sleeping pod featuring a reclined zero-gravity position for optimal rest. The pod includes a rotating privacy head cover that closes for a private, cocoon-like experience and opens automatically when your session ends.</p>
-          <ul class="features-list">
-            <li>Face ID or Student ID access via arm panel</li><li>Rotating head cover for full privacy</li>
-            <li>Built-in storage compartment for belongings</li><li>In-pod touch control panel (alarm, music, lighting, temperature)</li>
-            <li>Sound masking and white noise options</li><li>Sanitised pod with fresh linen after each use</li>
-            <li>CCTV monitored area with on-site staff</li><li>Emergency SOS button</li>
-          </ul>
-        </div>
-      </div>
-      <div class="model-card">
         <div class="model-img-wrap"><img id="model2PageImg" alt="Model 2"></div>
         <div class="model-card-body">
-          <h2>CapsulePod Pro</h2><span class="model-tag-inline">Model 2</span>
+          <h2>CapsulePod Pro</h2>
           <p>A fully enclosed capsule-style sleeping pod with a smooth sliding glass door for complete privacy. The interior features warm ambient LED lighting, a full-length mattress with pillow, and a touch control panel for personalised comfort settings. Ideal for deep, uninterrupted rest.</p>
           <ul class="features-list">
             <li>Face ID access with auto pod activation</li><li>Smooth sliding glass door for easy entry and full privacy</li>
@@ -329,7 +316,7 @@
       <div class="pod-detail" id="podDetail">
         <div class="pod-detail-header">
           <div id="podImgSlot"></div>
-          <div class="pod-detail-info"><h3 id="podDetailTitle"></h3><span class="model-tag" id="podModelTag"></span><p id="podModelDesc"></p></div>
+          <div class="pod-detail-info"><h3 id="podDetailTitle"></h3><p id="podModelDesc"></p></div>
         </div>
         <div class="hours-remaining"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>You have <strong id="hoursLeft">12</strong> hours remaining today</div>
         <div class="timeslots-label">Available Time Slots (1-hour)</div>
@@ -382,21 +369,21 @@ const POD_ICON_SVG = '<svg class="pod-icon" viewBox="0 0 24 24" fill="none" stro
 
 const locations = [
   { name:"Library", femaleOnly:false, layoutClass:"grid-2x2", pods:[
-    {id:"L1",model:1,currentStatus:"available",slots:genSlots(5)},
+    {id:"L1",model:2,currentStatus:"available",slots:genSlots(5)},
     {id:"L2",model:2,currentStatus:"occupied",slots:genSlots(8)},
-    {id:"L3",model:1,currentStatus:"available",slots:genSlots(4)},
+    {id:"L3",model:2,currentStatus:"available",slots:genSlots(4)},
     {id:"L4",model:2,currentStatus:"reserved",slots:genSlots(7),reservedBy:"other"}
   ]},
   { name:"Student Lounge", femaleOnly:false, layoutClass:"grid-3x2", pods:[
-    {id:"SL1",model:1,currentStatus:"available",slots:genSlots(3)},
+    {id:"SL1",model:2,currentStatus:"available",slots:genSlots(3)},
     {id:"SL2",model:2,currentStatus:"occupied",slots:genSlots(9)},
-    {id:"SL3",model:1,currentStatus:"available",slots:genSlots(5)},
+    {id:"SL3",model:2,currentStatus:"available",slots:genSlots(5)},
     {id:"SL4",model:2,currentStatus:"available",slots:genSlots(4)},
-    {id:"SL5",model:1,currentStatus:"reserved",slots:genSlots(6),reservedBy:"other"}
+    {id:"SL5",model:2,currentStatus:"reserved",slots:genSlots(6),reservedBy:"other"}
   ]},
   { name:"W3", femaleOnly:true, layoutClass:"grid-1x3", pods:[
     {id:"W3-1",model:2,currentStatus:"occupied",slots:genSlots(10)},
-    {id:"W3-2",model:1,currentStatus:"available",slots:genSlots(3)},
+    {id:"W3-2",model:2,currentStatus:"available",slots:genSlots(3)},
     {id:"W3-3",model:2,currentStatus:"reserved",slots:genSlots(6),reservedBy:"other"}
   ]}
 ];
@@ -432,7 +419,7 @@ function handleLogin(){
   document.getElementById('loginOverlay').classList.add('hidden');
   document.getElementById('appWrapper').classList.add('visible');
   document.getElementById('userEmail').textContent=e;
-  document.getElementById('model1PageImg').src=MODEL1_IMG;document.getElementById('model2PageImg').src=MODEL2_IMG;
+  document.getElementById('model2PageImg').src=MODEL2_IMG;
   updateMapLabels();
 }
 function handleLogout(){
@@ -486,7 +473,6 @@ function selectPod(locIdx,podId,cellEl){
   if(info.img){imgSlot.innerHTML='<img class="pod-model-img" src="'+info.img+'" alt="'+info.name+'">';}
   else{imgSlot.innerHTML='<div class="pod-model-img-placeholder">No Image</div>';}
   document.getElementById('podDetailTitle').textContent='Pod '+pod.id;
-  document.getElementById('podModelTag').textContent=info.tag+' \u2014 '+info.name;
   document.getElementById('podModelDesc').textContent=info.desc;
   const remaining=Math.max(0,12-hoursUsedToday);
   document.getElementById('hoursLeft').textContent=remaining;
@@ -574,7 +560,7 @@ function openBookingDetail(idx){
   html+='<div class="bd-row"><span class="bd-label">Name</span><span class="bd-value">'+b.name+'</span></div>';
   html+='<div class="bd-row"><span class="bd-label">Student ID</span><span class="bd-value">'+b.studentId+'</span></div>';
   html+='<div class="bd-row"><span class="bd-label">Status</span><span class="bd-value"><span class="status-badge '+(b.status==='Confirmed'?'confirmed':'cancelled')+'">'+b.status+'</span></span></div>';
-  html+='<div class="bd-model-section">'+imgHtml+'<div class="bd-model-info"><strong>'+info.tag+' \u2014 '+info.name+'</strong><p>'+info.desc+'</p></div></div>';
+  html+='<div class="bd-model-section">'+imgHtml+'<div class="bd-model-info"><strong>'+info.name+'</strong><p>'+info.desc+'</p></div></div>';
   if(b.status==='Confirmed'){html+='<button class="btn-cancel-booking" onclick="promptCancelBooking('+idx+')">Cancel This Booking</button>';}
   else{html+='<button class="btn-cancel-booking" disabled>Cancelled</button>';}
   document.getElementById('bookingDetailBody').innerHTML=html;
